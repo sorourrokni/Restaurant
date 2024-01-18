@@ -1,6 +1,6 @@
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from ast import Delete
-from re import A
+from re import A, S
 from django.contrib.auth.models import AbstractUser
 import email
 from pyexpat import model
@@ -9,61 +9,92 @@ from unicodedata import category, name
 from django.db import models
 
 # Create your models here.
+class Address(models.Model):
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    street = models.CharField(max_length=100)
+    zipCode = models.CharField(primary_key=True,max_length=100,unique=True)
+    
+    def __str__(self) -> str:
+        return self.city + self.state + self.street + self.zipCode
 
-class Restaurant(models.Model):
-    name = models.CharField(max_length=200)
-    address = models.TextField()
-    rate = models.FloatField()
-    isOpen = models.BooleanField(default=True)
-    restaurant_type = models.CharField(max_length=60)
-    delivery_cost = models.IntegerField(default=0)
-    distance_to_origin = models.IntegerField()
-    
-    
-    
-    def __str__(self):
-        return self.name
-
-CATEGORIES = {
-    'fastfood':'fastfood',
-    'traditional':'traditional',
-    'foreignfood':'foreignfood'
-}
-
-class Food(models.Model):
-    name = models.CharField(max_length=300)
-    category = models.CharField(max_length=20,choices=CATEGORIES)
-    description = models.TextField()
-    price = models.IntegerField(default=0)
-    rate = models.FloatField()
-    rastaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
-    
-    
-    def __str__(self):
-        return self.name
-    
 class MyUser(AbstractUser):
     user_name = models.CharField(max_length=100,unique=True,null=False,primary_key=True)
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
-    email = models.EmailField()
-    password = models.CharField()
-    phone_number = models.models.CharField(max_length=50)
-    birthDate = models.DateTimeField()
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=30)
+    phone_number = models.CharField(max_length=50)
+    birthDate = models.DateTimeField(null=True)
+    address = models.ManyToManyField(Address)
+    # profile_image = models.ImageField()
     
+
+    def __str__(self):
+        return self.user_name
+
+
+
+
+CATEGORIES = [
+    ('Fa','fastfood'),
+    ('Tr','traditional'),
+    ('Fo','foreignfood')
+]
+class Food(models.Model):
+    name = models.CharField(max_length=300)
+    category = models.CharField(max_length=2,choices=CATEGORIES)
+    description = models.TextField()
+    price = models.IntegerField(default=0)
+    rate = models.FloatField(validators=[MinValueValidator(0),MaxValueValidator(5)])
+    # food_image = models.ImageField()
+    
+    def __str__(self):
+        return self.name
+    
+    
+    
+class Restaurant(models.Model):
+    name = models.CharField(max_length=200)
+    address = models.OneToOneField(Address,on_delete=models.CASCADE,unique=True)
+    rate = models.FloatField(validators=[MinValueValidator(0),MaxValueValidator(5)])
+    isOpen = models.BooleanField(default=True)
+    restaurant_type = models.CharField(max_length=60)
+    delivery_cost = models.IntegerField(default=0)
+    distance_to_origin = models.IntegerField()
+    foods = models.ManyToManyField(Food,blank=True,related_name='restaurants')
+    # restaurant_image = models.ImageField()
     
     
     def __str__(self):
-        return self.user_name
+        return self.name
+
+
+
+    
     
 class Cart(models.Model):
     user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    foods = models.ManyToManyField(Food)
+    total_amount = models.IntegerField()
+    foods = models.ManyToManyField(Food,blank=True)
+
+class Order(models.Model):
+    user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
+    address_delivery = models.OneToOneField(Address,on_delete=models.CASCADE)
+    timeCreated = models.DateTimeField(auto_now_add=True)
+    cart = models.OneToOneField(Cart,on_delete=models.CASCADE)
+
+
+    
+    
+    
+    
+    
+    
     
     
      
 
-class Order(models.Model):
-    user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    address_delivery = models.TextField()
+    
+    
     
