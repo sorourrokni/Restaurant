@@ -1,6 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from ast import Delete
-from re import A, S
+from re import A, S, T
 from django.contrib.auth.models import AbstractUser
 import email
 from pyexpat import model
@@ -19,7 +19,6 @@ class Address(models.Model):
         return self.city + self.state + self.street + self.zipCode
 
 class MyUser(AbstractUser):
-    user_name = models.CharField(max_length=100,unique=True,null=False,primary_key=True)
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
     email = models.EmailField(unique=True)
@@ -27,11 +26,11 @@ class MyUser(AbstractUser):
     phone_number = models.CharField(max_length=50)
     birthDate = models.DateTimeField(null=True)
     address = models.ManyToManyField(Address)
-    # profile_image = models.ImageField()
+    profile_image = models.ImageField()
     
 
     def __str__(self):
-        return self.user_name
+        return self.first_name + self.last_name
 
 
 
@@ -47,7 +46,7 @@ class Food(models.Model):
     description = models.TextField()
     price = models.IntegerField(default=0)
     rate = models.FloatField(validators=[MinValueValidator(0),MaxValueValidator(5)])
-    # food_image = models.ImageField()
+    food_image = models.ImageField()
     
     def __str__(self):
         return self.name
@@ -63,7 +62,7 @@ class Restaurant(models.Model):
     delivery_cost = models.IntegerField(default=0)
     distance_to_origin = models.IntegerField()
     foods = models.ManyToManyField(Food,blank=True,related_name='restaurants')
-    # restaurant_image = models.ImageField()
+    restaurant_image = models.ImageField()
     
     
     def __str__(self):
@@ -85,6 +84,31 @@ class Order(models.Model):
     cart = models.OneToOneField(Cart,on_delete=models.CASCADE)
 
 
+class Restaurant_food(models.Model):
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
+    food = models.ForeignKey(Food,on_delete=models.CASCADE)
+    
+
+    def __str__(self):
+        return self.restaurant + self.food
+    
+    
+class Cart_food(models.Model):
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
+    food = models.ForeignKey(Food,on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return self.cart + self.food
+    
+    
+    
+class userAddress(models.Model):
+    user = models.ForeignKey(MyUser,on_delete=models.CASCADE,blank=True)
+    address = models.ForeignKey(Address,on_delete=models.CASCADE,blank=True)
+
+    
+    def __str__(self):
+        return self.address + self.user
     
     
     
