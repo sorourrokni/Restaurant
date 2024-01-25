@@ -62,7 +62,7 @@ class Food(models.Model):
 class MyUser(AbstractUser):
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
-    email = models.EmailField(unique=True)
+    # email = models.EmailField(unique=True, blank=False, null=False,required=True)
     password = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=50)
     birthDate = models.DateTimeField(null=True)

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-069b6&t+7!81bl&fulq1q=$$yc%la9@vn#6$2ty!-i@4!&-_x)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,8 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'rest_framework',
-     'api.apps.ApiConfig',
+    'rest_framework',
+    'api.apps.ApiConfig',
+    'dj_rest_auth',
+    'rest_framework.authtoken',
+     
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
 
 
@@ -51,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'restaurant.urls'
@@ -132,3 +141,38 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'api.MyUser'
 
 
+SITE_ID = 1
+
+
+
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework.authentication.TokenAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+   ),
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser'
+   ),
+}
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+REST_FRAMEWORK = {
+   'DEFAULT_PERMISSION_CLASSES': ( 'rest_framework.permissions.IsAuthenticated', ),
+}
+
+
+# REST_USE_JWT = True
+
+# JWT_AUTH_COOKIE = 'access'
+# JWT_AUTH_REFRESH_COOKIE= 'refresh'
+
+REST_AUTH = {
+    'JWT_AUTH_HTTPONLY': False,
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'access',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh',
+}

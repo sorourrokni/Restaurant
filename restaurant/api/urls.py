@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
 from .views import *
 
 app_name = "api"
@@ -11,7 +11,6 @@ urlpatterns = [
     path("restaurants/freeDelivery",RestaurantFreeDelivery.as_view(),name='restaurantFreeDelivery'), 
     path("restaurants/popular",RestaurantPopularList.as_view(),name='popularRestaurant'), 
     path("restaurants/nearest",RestaurantNearest.as_view(),name='nearestRestaurant'), 
-
 
 
     # path("foods/<str:name>",FoodNameDetail.as_view(),name='foodNameDetail'),
@@ -54,17 +53,11 @@ urlpatterns = [
 
     
     
-
-
-    
-    
     path("address/create",AddressCreate.as_view(),name='AddressCreate'),
     path("address",AddressListAll.as_view(),name='AddressListAll'),
     path("address/<int:pk>",AddressDetail.as_view(),name='AddressDetail'),
 
 
-
-    
     
 
     
