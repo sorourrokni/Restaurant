@@ -77,3 +77,15 @@ class User_addressSerializer(serializers.ModelSerializer):
         model = userAddress
         fields = "__all__"
 
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ['first_name','last_name','phone_number','profile_image']
+
+
+class OrderChangeStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status',]
+

@@ -23,6 +23,7 @@ urlpatterns = [
     path("foods/foreignfood",FoodForeignFoodList.as_view(),name='FoodForeignfood'),
     
     
+    path("users/<int:pk>/update",UserUpdateProfile.as_view(),name='UserUpdate'),
     path("users/",MyUserListAll.as_view(),name='MyUserList'),
     path("users/<int:pk>",MyUserDetail.as_view(),name='MyUserDetail'),
     path("users/<int:pk>/foodFavorite",MyUserFoodLikeDetail.as_view(),name='MyUserFoodLikeDetail'),
@@ -45,6 +46,16 @@ urlpatterns = [
     path("orders/create",OrderCreate.as_view(),name='OrderCreate'),
     path("orders/",OrderListALl.as_view(),name='OrderListAll'),
     path("orders/<int:pk>",OrderDetail.as_view(),name='cartDetail'),
+    path("orders/cancel",OrderCancelList.as_view(),name='OrderCancelList'),
+    path("orders/complete",OrderCompleteList.as_view(),name='OrderCompleteList'),
+    path("orders/proccess",OrderProccessingList.as_view(),name='OrderProccessList'),
+    path("orders/<int:pk>/status",OrderChangeStatus.as_view(),name='OrderChangeStatus'),
+    path("orders/<int:pk>/restaurantUpdate",OrderSetRestaurant.as_view(),name='OrderSetRestaurant'),
+
+    
+    
+
+
     
     
     path("address/create",AddressCreate.as_view(),name='AddressCreate'),

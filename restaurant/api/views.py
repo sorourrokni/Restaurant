@@ -1,3 +1,4 @@
+import re
 from rest_framework.generics import *
 from rest_framework import status
 from rest_framework.response import Response
@@ -120,6 +121,19 @@ class CartDetail(RetrieveUpdateDestroyAPIView):
 
         instance = serializer.instance
         
+        
+        # cart_id = instance.id
+        # cart_food = Cart_food(Cart_food.objects.filter(cart = cart_id).first)
+        # food_id = cart_food.food
+        # food = Food(Food.objects.get(id = food_id))
+        # restaurant_id = food.restaurant
+        # instance.restaurant = restaurant_id
+        
+        
+        # restaurant = Restaurant(Restaurant.objects.get(id=restaurant_id))
+        
+        
+        
         # restaurant = None
         total_amount = 0
         for cart_food in Cart_food.objects.filter(cart=instance):
@@ -127,6 +141,17 @@ class CartDetail(RetrieveUpdateDestroyAPIView):
             # isinstance.restaurant = cart_food.food.restaurant
 
 
+        # cart_id = instance.id
+        
+        # cart_food = Cart_food(Cart_food.objects.filter(cart = cart_id).first)
+        
+        # food_id = cart_food.food
+        # food = Food(Food.objects.filter(id = food_id).first)
+        # restaurant_id = food.restaurant
+        # instance.restaurant = restaurant_id
+        
+        # restaurant = Restaurant(Restaurant.objects.get(id = restaurant_id))
+        
         instance.total_amount = total_amount
         instance.save()
         
@@ -191,5 +216,56 @@ class AddressUserList(ListAPIView):
 class UserAddressAdd(CreateAPIView):
     queryset = userAddress.objects.all()
     serializer_class = User_addressSerializer
-   
     
+    
+class UserUpdateProfile(UpdateAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = UserUpdateSerializer
+    
+
+class OrderCancelList(ListAPIView):
+    queryset = Order.objects.filter(status='ca')
+    serializer_class = OrderSerializer
+
+
+class OrderCompleteList(ListAPIView):
+    queryset = Order.objects.filter(status='co')
+    serializer_class = OrderSerializer
+
+class OrderProccessingList(ListAPIView):
+    queryset = Order.objects.filter(status='pr')
+    serializer_class = OrderSerializer
+    
+    
+class OrderChangeStatus(UpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderChangeStatusSerializer
+
+    
+
+class OrderSetRestaurant(UpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    
+    
+    def perform_update(self, serializer):
+        
+        
+        super().perform_update(serializer)
+
+
+        instance = serializer.instance
+        
+        
+        cart_id = instance.cart
+        cart_food = Cart_food(Cart_food.objects.get(cart = cart_id))
+        food_id = cart_food.food
+        food = Food(Food.objects.get(id = food_id))
+        restaurant_id = food.restaurant
+        instance.restaurant = restaurant_id
+
+        # instance.total_amount = total_amount
+        instance.save()
+        
+        
+        return Response(self.get_serializer(instance).data)
