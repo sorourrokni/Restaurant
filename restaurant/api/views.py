@@ -120,11 +120,11 @@ class CartDetail(RetrieveUpdateDestroyAPIView):
 
         instance = serializer.instance
         
-        restaurant = None
+        # restaurant = None
         total_amount = 0
         for cart_food in Cart_food.objects.filter(cart=instance):
             total_amount += int(cart_food.food.price) * int(cart_food.number_food)
-            isinstance.restaurant = cart_food.food.restaurant
+            # isinstance.restaurant = cart_food.food.restaurant
 
 
         instance.total_amount = total_amount
@@ -141,6 +141,11 @@ class OrderDetail(RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     
+class OrderCreate(CreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+  
+ 
     
 class CartAddFood(CreateAPIView):
     queryset = MyUser_foodLike.objects.all()
@@ -156,5 +161,35 @@ class CartFoodList(ListAPIView):
         return Cart_food.objects.filter(cart=cart_id)
     
 
-class CartSetTotalAmount(RetrieveUpdateDestroyAPIView):
-    pass
+class CartCreate(CreateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+
+
+class AddressCreate(CreateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+class AddressListAll(ListAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+
+class AddressDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+
+class AddressUserList(ListAPIView):
+    serializer_class = User_addressSerializer
+    
+    def get_queryset(self):
+        user_id = self.kwargs['pk']
+        return userAddress.objects.filter(user=user_id)
+    
+
+class UserAddressAdd(CreateAPIView):
+    queryset = userAddress.objects.all()
+    serializer_class = User_addressSerializer
+   
+    

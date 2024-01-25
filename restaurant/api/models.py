@@ -98,7 +98,7 @@ ORDER_STATUS = [
 ]
 class Order(models.Model):
     user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    address_delivery = models.OneToOneField(Address,on_delete=models.CASCADE)
+    address_delivery = models.ForeignKey(Address,on_delete=models.CASCADE)
     timeCreated = models.DateTimeField(auto_now_add=True)
     cart = models.OneToOneField(Cart,on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=True)
@@ -125,7 +125,17 @@ class Cart_food(models.Model):
         if self.cart.restaurant != self.food.restaurant:
             raise ValidationError("Cannot add food to cart from a different restaurant.")
 
-    # def __str__(self):
+    def save(self, *args, **kwargs):
+            # If the cart is not set, create a new Cart and set its restaurant based on the food
+        if not self.cart_id:
+            cart = Cart.objects.create(restaurant=self.food.restaurant)
+            self.cart = cart
+
+        
+        super(Cart_food, self).save(*args, **kwargs)
+        
+        self.cart.save()
+        # def __str__(self):
     #     return self.cart + self.food
     
     

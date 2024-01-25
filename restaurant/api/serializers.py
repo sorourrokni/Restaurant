@@ -3,7 +3,7 @@ import imp
 from statistics import mode
 from sys import implementation
 from rest_framework import serializers
-from .models import Cart, Cart_food, Food, MyUser, MyUser_foodLike, MyUser_restaurantLike, Order, Restaurant
+from .models import Address, Cart, Cart_food, Food, MyUser, MyUser_foodLike, MyUser_restaurantLike, Order, Restaurant, userAddress
 
 
 
@@ -66,4 +66,14 @@ class CardAddFoodSerializer(serializers.ModelSerializer):
         model = Cart_food
         fields = "__all__"
 
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"
+
+class User_addressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = userAddress
+        fields = "__all__"
 

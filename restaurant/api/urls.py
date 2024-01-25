@@ -29,9 +29,12 @@ urlpatterns = [
     path("users/<int:pk>/restaurantFavorite",MyUserRestaurantLikeDetail.as_view(),name='MyUserFoodLikeDetail'),
     path("users/foodFavorite/add",MyUserFoodLikeAdd.as_view(),name='MyUserFoodLikeAdd'),
     path("users/restaurantFavorite/add",MyUserRestaurantLikeAdd.as_view(),name='MyUserRestaurantLikeAdd'),
+    path("users/<int:pk>/Address",AddressUserList.as_view(),name='UserAddressList'),
+    path("users/Address/add",UserAddressAdd.as_view(),name='UserAddressAdd'),
+
     # path("users/<int:pk>",MyUserDetail.as_view(),name='MyUserDetail'),
     
-    
+    path("carts/create",CartCreate.as_view(),name='CartCreate'),
     path("carts/",CartListAll.as_view(),name='CartListAll'),
     path("carts/<int:pk>",CartDetail.as_view(),name='cartDetail'),
     path("carts/add",CartAddFood.as_view(),name='CartAddFood'),
@@ -39,9 +42,17 @@ urlpatterns = [
     
     
     
-    
-    path("orders/",OrderListALl.as_view(),name='orderListAll'),
+    path("orders/create",OrderCreate.as_view(),name='OrderCreate'),
+    path("orders/",OrderListALl.as_view(),name='OrderListAll'),
     path("orders/<int:pk>",OrderDetail.as_view(),name='cartDetail'),
+    
+    
+    path("address/create",AddressCreate.as_view(),name='AddressCreate'),
+    path("address",AddressListAll.as_view(),name='AddressListAll'),
+    path("address/<int:pk>",AddressDetail.as_view(),name='AddressDetail'),
+
+
+
     
     
 
