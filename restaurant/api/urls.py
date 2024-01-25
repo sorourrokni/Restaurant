@@ -7,7 +7,6 @@ app_name = "api"
 
 urlpatterns = [
     
-    #home________________________________________________________________
     path("restaurants/",RestaurantListAll.as_view(),name='restaurantAll'), 
     path("restaurants/freeDelivery",RestaurantFreeDelivery.as_view(),name='restaurantFreeDelivery'), 
     path("restaurants/popular",RestaurantPopularList.as_view(),name='popularRestaurant'), 
@@ -31,6 +30,20 @@ urlpatterns = [
     path("users/foodFavorite/add",MyUserFoodLikeAdd.as_view(),name='MyUserFoodLikeAdd'),
     path("users/restaurantFavorite/add",MyUserRestaurantLikeAdd.as_view(),name='MyUserRestaurantLikeAdd'),
     # path("users/<int:pk>",MyUserDetail.as_view(),name='MyUserDetail'),
+    
+    
+    path("carts/",CartListAll.as_view(),name='CartListAll'),
+    path("carts/<int:pk>",CartDetail.as_view(),name='cartDetail'),
+    path("carts/add",CartAddFood.as_view(),name='CartAddFood'),
+    path("carts/<int:pk>/food/",CartFoodList.as_view(),name='CartFoodList'),
+    
+    
+    
+    
+    path("orders/",OrderListALl.as_view(),name='orderListAll'),
+    path("orders/<int:pk>",OrderDetail.as_view(),name='cartDetail'),
+    
+    
 
     
 

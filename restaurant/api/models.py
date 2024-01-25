@@ -1,4 +1,5 @@
 from tkinter import N
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from ast import Delete
 from re import A, S, T
@@ -14,7 +15,7 @@ class Address(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
-    zipCode = models.CharField(primary_key=True,max_length=100,unique=True)
+    zipCode = models.CharField(max_length=100,unique=True)
     
     def __str__(self) -> str:
         return self.city + self.state + self.street + self.zipCode
@@ -71,10 +72,10 @@ class MyUser(AbstractUser):
     restaurant_like = models.ManyToManyField(Restaurant,blank=True)
 
 
-    def __init__(self, *args, **kwargs):
-        super(MyUser, self).__init__(*args, **kwargs)
-        # Set the default value of is_active to False when creating a new user
-        self.is_active = False
+    # def __init__(self, *args, **kwargs):
+    #     super(MyUser, self).__init__(*args, **kwargs)
+    #     # Set the default value of is_active to False when creating a new user
+    #     self.is_active = False
         
     def __str__(self):
         return self.first_name + self.last_name
@@ -86,8 +87,9 @@ class MyUser(AbstractUser):
 class Cart(models.Model):
     user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
     total_amount = models.IntegerField(default=0)
-    foods = models.ManyToManyField(Food,blank=True)
-
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=True)
+    # foods = models.ManyToManyField(Food,blank=True)
+    
 
 ORDER_STATUS = [
     ('pr','Processing'),
@@ -103,9 +105,9 @@ class Order(models.Model):
     status = models.CharField(choices=ORDER_STATUS,max_length=2,default='pr')
 
 
-# class Restaurant_food(models.Model):
-#     restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
-#     food = models.ForeignKey(Food,on_delete=models.CASCADE)
+class Address_Order(models.Model):
+    address = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=True)
+    order = models.ForeignKey(Food,on_delete=models.CASCADE,null=True)
     
 
 #     def __str__(self):
@@ -115,6 +117,13 @@ class Order(models.Model):
 class Cart_food(models.Model):
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
     food = models.ForeignKey(Food,on_delete=models.CASCADE,null=True)
+    number_food = models.PositiveIntegerField(default=1)
+    
+    
+    def clean(self):
+        # Ensure the Cart and Food belong to the same Restaurant
+        if self.cart.restaurant != self.food.restaurant:
+            raise ValidationError("Cannot add food to cart from a different restaurant.")
 
     # def __str__(self):
     #     return self.cart + self.food
@@ -156,8 +165,12 @@ class Discount(models.Model):
     def __str__(self):
         return self.code_discount    
         
-    
-    
+
+
+class Cart_Restaurant(models.Model):
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=True)
+
     
      
 

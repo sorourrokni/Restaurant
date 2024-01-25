@@ -78,13 +78,20 @@ class MyUserDetail(RetrieveUpdateDestroyAPIView):
 
 
 class MyUserFoodLikeDetail(RetrieveUpdateDestroyAPIView):
-    queryset = MyUser.objects.all()
+    # queryset = MyUser_foodLike.objects.all()
     serializer_class = MyUserFavoriteFoodSerializer
+    def get_queryset(self):
+        user_id = self.kwargs['pk']
+        return MyUser_foodLike.objects.filter(user=user_id)
     
 
 class MyUserRestaurantLikeDetail(RetrieveUpdateDestroyAPIView):
-    queryset = MyUser.objects.all()
+    # queryset = MyUser.objects.all()
     serializer_class = MyUserFavoriteRestaurantSerializer
+    
+    def get_queryset(self):
+        user_id = self.kwargs['pk']
+        return MyUser_restaurantLike.objects.filter(user=user_id)
     
 class MyUserRestaurantLikeAdd(CreateAPIView):
     queryset = MyUser_restaurantLike.objects.all()
@@ -94,3 +101,60 @@ class MyUserRestaurantLikeAdd(CreateAPIView):
 class MyUserFoodLikeAdd(CreateAPIView):
     queryset = MyUser_foodLike.objects.all()
     serializer_class = MyUserFavoriteFoodSerializer
+    
+    
+class CartListAll(ListAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+
+class CartDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    
+    
+    def perform_update(self, serializer):
+        
+        
+        super().perform_update(serializer)
+
+
+        instance = serializer.instance
+        
+        restaurant = None
+        total_amount = 0
+        for cart_food in Cart_food.objects.filter(cart=instance):
+            total_amount += int(cart_food.food.price) * int(cart_food.number_food)
+            isinstance.restaurant = cart_food.food.restaurant
+
+
+        instance.total_amount = total_amount
+        instance.save()
+        
+        
+        return Response(self.get_serializer(instance).data)
+    
+class OrderListALl(ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    
+    
+class CartAddFood(CreateAPIView):
+    queryset = MyUser_foodLike.objects.all()
+    serializer_class = CardAddFoodSerializer
+
+
+class CartFoodList(ListAPIView):
+    # queryset = Cart_food.objects.filter(cart='pk')
+    serializer_class = CardAddFoodSerializer
+    
+    def get_queryset(self):
+        cart_id = self.kwargs['pk']
+        return Cart_food.objects.filter(cart=cart_id)
+    
+
+class CartSetTotalAmount(RetrieveUpdateDestroyAPIView):
+    pass
