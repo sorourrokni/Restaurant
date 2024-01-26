@@ -269,3 +269,21 @@ class OrderSetRestaurant(UpdateAPIView):
         
         
         return Response(self.get_serializer(instance).data)
+
+
+class DiscountCreate(CreateAPIView):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+
+class DiscountDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+ 
+ 
+class DiscountCode(ListAPIView):
+    serializer_class = DiscountSerializer
+
+    def get_queryset(self):
+        code = self.kwargs['code']
+        return Discount.objects.filter(code_discount=code)
+

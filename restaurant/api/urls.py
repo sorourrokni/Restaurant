@@ -58,6 +58,12 @@ urlpatterns = [
     path("address/<int:pk>",AddressDetail.as_view(),name='AddressDetail'),
 
 
+    path("discount/",DiscountCreate.as_view(),name='DiscountCreate'),
+    path("discount/<int:pk>",DiscountDetail.as_view(),name='DiscountDetail'),
+    path("discount/<str:code>",DiscountCode.as_view(),name='DiscountGetCode'),
+
+
+
     
 
     

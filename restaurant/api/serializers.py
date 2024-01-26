@@ -3,7 +3,7 @@ import imp
 from statistics import mode
 from sys import implementation
 from rest_framework import serializers
-from .models import Address, Cart, Cart_food, Food, MyUser, MyUser_foodLike, MyUser_restaurantLike, Order, Restaurant, userAddress
+from .models import Address, Cart, Cart_food, Discount, Food, MyUser, MyUser_foodLike, MyUser_restaurantLike, Order, Restaurant, userAddress
 
 
 
@@ -89,3 +89,7 @@ class OrderChangeStatusSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['status',]
 
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = "__all__"
