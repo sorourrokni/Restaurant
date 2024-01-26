@@ -52,8 +52,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     
     'drf_yasg',
-    
-    
+    'corsheaders',
 ]
 
 
@@ -66,6 +65,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+     'corsheaders.middleware.CorsMiddleware',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Replace with your frontend origin
+    # ... other allowed origins
 ]
 
 ROOT_URLCONF = 'restaurant.urls'
