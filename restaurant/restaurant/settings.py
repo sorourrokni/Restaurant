@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'rest_framework_swagger',
+    
+    'drf_yasg',
+    
+    
 ]
 
 
@@ -169,9 +173,9 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-# REST_FRAMEWORK = {
-#    'DEFAULT_PERMISSION_CLASSES': ( 'rest_framework.permissions.IsAuthenticated', ),
-# }
+REST_FRAMEWORK = {
+   'DEFAULT_PERMISSION_CLASSES': ( 'rest_framework.permissions.IsAuthenticated', ),
+}
 
 
 # REST_USE_JWT = True
